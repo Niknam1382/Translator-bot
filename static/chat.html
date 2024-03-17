@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>چت بات من</title>
+<style>
+  body { font-family: Arial, sans-serif; }
+  #chat-container { width: 100%; max-width: 600px; margin: auto; }
+  #chat-box { height: 300px; overflow-y: scroll; border: 1px solid #ccc; padding: 10px; }
+  #chat-input { width: 100%; padding: 10px; }
+</style>
+</head>
+<body>
+
+<div id="chat-container">
+  <div id="chat-box"></div>
+  <input type="text" id="chat-input" placeholder="پیام خود را اینجا بنویسید..." />
+</div>
+
+<script>
+  const chatBox = document.getElementById('chat-box');
+  const chatInput = document.getElementById('chat-input');
+
+  chatInput.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+      const message = chatInput.value;
+      const language = 'fa'; // یا هر زبان دیگری که می‌خواهید پشتیبانی کنید
+      sendMessage(message, language);
+      chatInput.value = '';
+    }
+  });
+
+  function sendMessage(message, language) {
+    // نمایش پیام کاربر در چت باکس
+    chatBox.innerHTML += `<div>شما: ${message}</div>`;
+
+    // تنظیمات درخواست POST
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: message, language: language })
+    };
+
+    // ارسال درخواست و دریافت پاسخ
+    fetch('http://localhost:5000/chat', requestOptions)
+      .then(response => response.json())
+      .then(data => {
+        // نمایش پاسخ چت بات در چت باکس
+        chatBox.innerHTML += `<div>چت بات: ${data.response}</div>`;
+        // اسکرول به پایین چت باکس
+        chatBox.scrollTop = chatBox.scrollHeight;
+      })
+      .catch(error => console.error('Error:', error));
+  }
+</script>
+
+</body>
+</html>
