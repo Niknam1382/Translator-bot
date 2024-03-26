@@ -38,4 +38,5 @@ import os
 def chat_ui():
     return send_from_directory(os.path.join(app.root_path, 'static'), 'chat.html')
 
+# for run the project, Enter:
 # python chatbot.py
